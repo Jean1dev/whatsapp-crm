@@ -1,11 +1,9 @@
 
 import { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { ChevronRight, LogOut, MessageSquare, Settings, Users, Folder, Home, X, Menu } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
+import { ChevronRight, MessageSquare, Settings, Users, Folder, Home, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { WhatsappIcon } from "./WhatsappIcon";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -14,7 +12,6 @@ interface SidebarProps {
 
 const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
   const { pathname } = useLocation();
-  const { user, profile, signOut } = useAuth();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
@@ -31,19 +28,6 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
       setIsOpen(false);
     }
   }, [pathname, isMobile, setIsOpen]);
-
-  const getInitials = (name: string) => {
-    if (!name) return "U";
-    return name
-      .split(" ")
-      .map(part => part[0])
-      .join("")
-      .slice(0, 2)
-      .toUpperCase();
-  };
-
-  const fullName = profile?.full_name || user?.email?.split("@")[0] || "Usuário";
-  const userInitials = getInitials(fullName);
 
   const navItems = [
     { path: "/", icon: <Home className="w-5 h-5" />, label: "Dashboard" },
@@ -87,7 +71,7 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
             </div>
             {(isOpen || isMobile) && (
               <div className="ml-3">
-                <h2 className="text-lg font-bold">WhatsApp CRM</h2>
+                <h2 className="text-lg font-bricolage font-bold">WhatsApp CRM</h2>
               </div>
             )}
           </div>
@@ -110,7 +94,7 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
                 >
                   <span className="flex-shrink-0">{item.icon}</span>
                   {(isOpen || isMobile) && (
-                    <span className="ml-3">{item.label}</span>
+                    <span className="ml-3 font-medium">{item.label}</span>
                   )}
                   {!isOpen && !isMobile && (
                     <span className="absolute left-full rounded-md px-2 py-1 ml-1 bg-gray-900 text-white text-sm invisible opacity-0 -translate-x-3 group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 transition-all">
@@ -122,37 +106,6 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
             ))}
           </ul>
         </nav>
-
-        {/* User profile */}
-        <div className={`border-t p-4 ${!isOpen && !isMobile ? "flex justify-center" : ""}`}>
-          <div className="flex items-center">
-            <Avatar>
-              <AvatarImage src={profile?.avatar_url} />
-              <AvatarFallback className="bg-whatsapp/20 text-whatsapp">
-                {userInitials}
-              </AvatarFallback>
-            </Avatar>
-            
-            {(isOpen || isMobile) && (
-              <div className="ml-3 overflow-hidden">
-                <p className="text-sm font-medium truncate">{fullName}</p>
-                <p className="text-xs text-gray-500 truncate">{user?.email}</p>
-              </div>
-            )}
-          </div>
-          
-          {(isOpen || isMobile) && (
-            <Button 
-              variant="ghost"
-              size="sm"
-              className="mt-3 w-full justify-start text-gray-600 hover:text-red-600 hover:bg-red-50"
-              onClick={signOut}
-            >
-              <LogOut className="h-4 w-4 mr-2" />
-              Sair
-            </Button>
-          )}
-        </div>
 
         {/* Collapse button (desktop only) */}
         {!isMobile && (

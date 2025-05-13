@@ -9,7 +9,7 @@ const Index = () => {
         <div className="bg-whatsapp rounded-full h-20 w-20 flex items-center justify-center mx-auto mb-6">
           <span className="text-white font-bold text-4xl">W</span>
         </div>
-        <h1 className="text-4xl font-bold mb-4">Bem-vindo ao WhatsApp CRM</h1>
+        <h1 className="text-4xl font-bricolage font-bold mb-4">Bem-vindo ao WhatsApp CRM</h1>
         <p className="text-xl text-gray-600 mb-8">
           Gerencie seus contatos, conversas e funis de vendas integrados com o WhatsApp.
         </p>
@@ -32,7 +32,7 @@ const Index = () => {
           <div className="h-12 w-12 bg-whatsapp/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <MessageSquareIcon className="h-6 w-6 text-whatsapp" />
           </div>
-          <h3 className="font-semibold mb-2">Conversas</h3>
+          <h3 className="font-bricolage font-bold mb-2">Conversas</h3>
           <p className="text-sm text-gray-500">
             Gerencie suas conversas do WhatsApp direto na plataforma
           </p>
@@ -41,7 +41,7 @@ const Index = () => {
           <div className="h-12 w-12 bg-whatsapp/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <UsersIcon className="h-6 w-6 text-whatsapp" />
           </div>
-          <h3 className="font-semibold mb-2">Contatos</h3>
+          <h3 className="font-bricolage font-bold mb-2">Contatos</h3>
           <p className="text-sm text-gray-500">
             Organize seus contatos por categorias
           </p>
@@ -50,7 +50,7 @@ const Index = () => {
           <div className="h-12 w-12 bg-whatsapp/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <FolderIcon className="h-6 w-6 text-whatsapp" />
           </div>
-          <h3 className="font-semibold mb-2">Funis</h3>
+          <h3 className="font-bricolage font-bold mb-2">Funis</h3>
           <p className="text-sm text-gray-500">
             Acompanhe o progresso de suas negociações
           </p>
@@ -59,7 +59,7 @@ const Index = () => {
           <div className="h-12 w-12 bg-whatsapp/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <BotIcon className="h-6 w-6 text-whatsapp" />
           </div>
-          <h3 className="font-semibold mb-2">Agente IA</h3>
+          <h3 className="font-bricolage font-bold mb-2">Agente IA</h3>
           <p className="text-sm text-gray-500">
             Automatize respostas com inteligência artificial
           </p>

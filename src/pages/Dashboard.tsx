@@ -20,7 +20,7 @@ const Dashboard = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
+        <h1 className="text-3xl font-bricolage font-bold">Dashboard</h1>
         <Button asChild>
           <Link to="/chats">
             Abrir Conversas <ArrowRight className="ml-2 h-4 w-4" />
@@ -35,7 +35,7 @@ const Dashboard = () => {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalContacts}</div>
+            <div className="text-2xl font-bricolage font-bold">{totalContacts}</div>
             <p className="text-xs text-muted-foreground">
               {clientsCount} clientes, {suppliersCount} fornecedores, {teamCount} equipe, {generalCount} geral
             </p>
@@ -47,7 +47,7 @@ const Dashboard = () => {
             <MessageSquare className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalChats}</div>
+            <div className="text-2xl font-bricolage font-bold">{totalChats}</div>
             <p className="text-xs text-muted-foreground">
               Acompanhe as conversas em andamento
             </p>
@@ -59,7 +59,7 @@ const Dashboard = () => {
             <Folder className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalFunnels}</div>
+            <div className="text-2xl font-bricolage font-bold">{totalFunnels}</div>
             <p className="text-xs text-muted-foreground">
               Gerencie seus processos de vendas
             </p>
@@ -70,7 +70,7 @@ const Dashboard = () => {
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Contatos Recentes</CardTitle>
+            <CardTitle className="font-bricolage">Contatos Recentes</CardTitle>
             <CardDescription>Os últimos 5 contatos adicionados</CardDescription>
           </CardHeader>
           <CardContent>
@@ -99,7 +99,7 @@ const Dashboard = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Funis Ativos</CardTitle>
+            <CardTitle className="font-bricolage">Funis Ativos</CardTitle>
             <CardDescription>Seus funis de vendas</CardDescription>
           </CardHeader>
           <CardContent>
@@ -107,7 +107,7 @@ const Dashboard = () => {
               {funnels.map((funnel) => (
                 <div key={funnel.id} className="space-y-2">
                   <div className="flex items-center justify-between font-medium">
-                    <span>{funnel.name}</span>
+                    <span className="font-bricolage">{funnel.name}</span>
                     <span className="text-sm">{funnel.stages.length} estágios</span>
                   </div>
                   <div className="h-2 bg-muted rounded-full overflow-hidden flex">

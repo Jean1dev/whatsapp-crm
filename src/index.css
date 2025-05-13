@@ -1,4 +1,6 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -90,7 +92,11 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bricolage font-bold;
   }
 }
 
@@ -99,7 +105,7 @@
 }
 
 .kanban-column-header {
-  @apply p-2 font-semibold border-b bg-muted/80 rounded-t-md sticky top-0;
+  @apply p-2 font-bricolage font-bold border-b bg-muted/80 rounded-t-md sticky top-0;
 }
 
 .kanban-column-content {

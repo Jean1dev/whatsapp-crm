@@ -20,6 +20,10 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["Poppins", "var(--font-sans)", ...fontFamily.sans],
+        bricolage: ["Bricolage Grotesque", "var(--font-sans)", ...fontFamily.sans],
+      },
       colors: {
         whatsapp: "#25D366",
         "whatsapp-dark": "#128C7E",
@@ -70,9 +74,6 @@ const config = {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
-      },
-      fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
       },
       keyframes: {
         "accordion-down": {
