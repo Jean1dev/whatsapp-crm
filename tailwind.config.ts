@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,17 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				whatsapp: {
+					DEFAULT: '#25D366',
+					light: '#DCF8C6',
+					dark: '#128C7E',
+					chat: '#E5DDD5',
+				},
+				kanban: {
+					todo: '#f7f5f9',
+					inprogress: '#f0f8ff',
+					done: '#f0fff4',
 				}
 			},
 			borderRadius: {

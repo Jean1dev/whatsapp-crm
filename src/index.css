@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 142 70% 49%; /* WhatsApp Green */
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -30,25 +31,18 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 142 70% 49%; /* WhatsApp Green */
 
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
+    --sidebar-primary: 142 70% 49%; /* WhatsApp Green */
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 142 70% 49%; /* WhatsApp Green */
   }
 
   .dark {
@@ -61,7 +55,7 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
+    --primary: 142 70% 49%; /* WhatsApp Green */
     --primary-foreground: 222.2 47.4% 11.2%;
 
     --secondary: 217.2 32.6% 17.5%;
@@ -78,15 +72,15 @@
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 142 70% 49%; /* WhatsApp Green */
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary: 142 70% 49%; /* WhatsApp Green */
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 142 70% 49%; /* WhatsApp Green */
   }
 }
 
@@ -98,4 +92,32 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.kanban-column {
+  @apply flex flex-col min-w-[300px] max-w-[300px] bg-muted/50 rounded-md h-full;
+}
+
+.kanban-column-header {
+  @apply p-2 font-semibold border-b bg-muted/80 rounded-t-md sticky top-0;
+}
+
+.kanban-column-content {
+  @apply flex-1 p-2 overflow-y-auto space-y-2 min-h-[200px];
+}
+
+.conversation-card {
+  @apply bg-white rounded-md shadow p-3 cursor-grab hover:shadow-md transition-shadow duration-200;
+}
+
+.message-bubble {
+  @apply rounded-lg p-3 max-w-[80%] relative mb-2;
+}
+
+.message-bubble-sent {
+  @apply bg-whatsapp-light rounded-tr-none ml-auto;
+}
+
+.message-bubble-received {
+  @apply bg-white rounded-tl-none;
 }
