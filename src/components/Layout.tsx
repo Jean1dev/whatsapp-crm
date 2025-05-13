@@ -1,18 +1,36 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 
 const Layout = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (!mobile) {
+        setIsSidebarOpen(true);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <div className="min-h-screen flex">
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
-      <div className="flex-1 flex flex-col h-screen">
-        <header className="h-16 border-b flex items-center px-4 sm:px-6 lg:px-8">
+      <div 
+        className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ${
+          isSidebarOpen && !isMobile ? "ml-64" : isMobile ? "" : "ml-20"
+        }`}
+      >
+        <header className="h-16 border-b flex items-center px-4 sm:px-6 lg:px-8 bg-white shadow-sm">
           <Button
             variant="ghost"
             size="icon"
