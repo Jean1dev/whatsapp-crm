@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { funnels as mockFunnels } from "@/lib/mock-data";
 import { Plus, Trash2 } from "lucide-react";
+import { whatsappAPI } from "@/integrations/whatsapp";
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("account");
@@ -105,13 +105,41 @@ const AccountSettings = () => {
 const WhatsAppSettings = () => {
   const { toast } = useToast();
   const [connected, setConnected] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleConnect = () => {
-    setConnected(true);
-    toast({
-      title: "WhatsApp conectado",
-      description: "Seu WhatsApp foi conectado com sucesso.",
-    });
+  const handleConnect = async () => {
+    try {
+      setIsLoading(true);
+      const key = `whatsapp-${Math.random().toString(36).substring(7)}`;
+      
+      const initResponse = await whatsappAPI.initSession(key);
+      
+      if (initResponse.error) {
+        throw new Error(initResponse.message);
+      }
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      const qrCode = await whatsappAPI.getQRCode(key);
+      
+      const qrWindow = window.open('', '_blank');
+      if (qrWindow) {
+        qrWindow.document.write(qrCode);
+        qrWindow.document.close();
+      }
+
+      setConnected(true);
+      toast({
+        title: "QR Code gerado",
+        description: "Escaneie o QR Code com seu WhatsApp para conectar.",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro ao conectar",
+        description: error instanceof Error ? error.message : "Falha ao gerar QR Code",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleDisconnect = () => {
@@ -147,7 +175,9 @@ const WhatsAppSettings = () => {
         </div>
         <div className="flex space-x-2">
           {!connected ? (
-            <Button onClick={handleConnect}>Conectar WhatsApp</Button>
+            <Button onClick={handleConnect} disabled={isLoading}>
+              {isLoading ? "Gerando QR Code..." : "Conectar WhatsApp"}
+            </Button>
           ) : (
             <Button variant="destructive" onClick={handleDisconnect}>
               Desconectar WhatsApp
