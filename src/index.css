@@ -37,13 +37,11 @@
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
+    --sidebar: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 142 70% 49%; /* WhatsApp Green */
-    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-border: 220 13% 91%;
     --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
     --sidebar-ring: 142 70% 49%; /* WhatsApp Green */
   }
 
@@ -76,13 +74,11 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 142 70% 49%; /* WhatsApp Green */
     
-    --sidebar-background: 240 5.9% 10%;
+    --sidebar: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 142 70% 49%; /* WhatsApp Green */
-    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-border: 240 3.7% 15.9%;
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 142 70% 49%; /* WhatsApp Green */
   }
 }
@@ -133,7 +129,7 @@
 
 @layer components {
   .categories-scroll {
-    @apply flex space-x-2 overflow-x-auto py-2 px-2 scrollbar-thin;
+    @apply flex space-x-2 overflow-x-auto py-2 px-2;
     -ms-overflow-style: none;
     scrollbar-width: thin;
   }
