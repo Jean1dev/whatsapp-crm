@@ -97,9 +97,9 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
                     <span className="ml-3 font-medium">{item.label}</span>
                   )}
                   {!isOpen && !isMobile && (
-                    <span className="absolute left-full rounded-md px-2 py-1 ml-1 bg-gray-900 text-white text-sm invisible opacity-0 -translate-x-3 group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 transition-all">
+                    <div className="absolute left-full rounded-md px-2 py-1 ml-6 bg-gray-900 text-white text-sm invisible opacity-0 -translate-x-3 group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 transition-all">
                       {item.label}
-                    </span>
+                    </div>
                   )}
                 </NavLink>
               </li>

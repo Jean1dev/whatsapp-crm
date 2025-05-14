@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
@@ -19,6 +19,18 @@ const Layout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 768);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const { user, profile, signOut } = useAuth();
+  const location = useLocation();
+
+  // Function to get current page title based on route
+  const getPageTitle = () => {
+    const path = location.pathname;
+    if (path === "/") return "Dashboard";
+    if (path.startsWith("/chats")) return "Conversas";
+    if (path.startsWith("/contacts")) return "Contatos";
+    if (path.startsWith("/funnels")) return "Funis";
+    if (path.startsWith("/settings")) return "Configurações";
+    return "";
+  }
 
   useEffect(() => {
     const handleResize = () => {
@@ -45,6 +57,7 @@ const Layout = () => {
 
   const fullName = profile?.full_name || user?.email?.split("@")[0] || "Usuário";
   const userInitials = getInitials(fullName);
+  const pageTitle = getPageTitle();
 
   return (
     <div className="min-h-screen flex bg-background">
@@ -64,7 +77,7 @@ const Layout = () => {
             >
               <Menu className="h-5 w-5" />
             </Button>
-            <h1 className="text-xl font-bricolage font-bold">WhatsApp CRM</h1>
+            <h1 className="text-xl font-bricolage font-bold">{pageTitle}</h1>
           </div>
           
           {/* User menu in the right corner */}

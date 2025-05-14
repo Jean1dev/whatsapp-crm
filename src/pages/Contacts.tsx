@@ -9,23 +9,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { contacts as mockContacts } from "@/lib/mock-data";
 import { Plus, Search, MoreHorizontal, MessageSquare, User, Users, Briefcase, ListFilter } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useToast } from "@/components/ui/use-toast";
 
 const Contacts = () => {
   const [contacts, setContacts] = useState(mockContacts);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("all");
+  const { toast } = useToast();
 
   const filteredContacts = contacts.filter((contact) => {
     const matchesSearch = contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -108,45 +102,44 @@ const Contacts = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <Select value={filterCategory} onValueChange={setFilterCategory}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Categoria" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todas as categorias</SelectItem>
-            <SelectItem value="cliente">Cliente</SelectItem>
-            <SelectItem value="fornecedor">Fornecedor</SelectItem>
-            <SelectItem value="equipe">Equipe</SelectItem>
-            <SelectItem value="geral">Geral</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
 
-      <Card className="border-0 bg-white">
-        <Tabs defaultValue="all" onValueChange={setFilterCategory} className="w-full">
-          <TabsList className="grid grid-cols-5 w-full">
-            <TabsTrigger value="all">Todos</TabsTrigger>
-            <TabsTrigger value="cliente">Clientes</TabsTrigger>
-            <TabsTrigger value="fornecedor">Fornecedores</TabsTrigger>
-            <TabsTrigger value="equipe">Equipe</TabsTrigger>
-            <TabsTrigger value="geral">Geral</TabsTrigger>
-          </TabsList>
-          <TabsContent value="all" className="mt-4 p-0">
-            <ContactTable contacts={filteredContacts} />
-          </TabsContent>
-          <TabsContent value="cliente" className="mt-4 p-0">
-            <ContactTable contacts={filteredContacts} />
-          </TabsContent>
-          <TabsContent value="fornecedor" className="mt-4 p-0">
-            <ContactTable contacts={filteredContacts} />
-          </TabsContent>
-          <TabsContent value="equipe" className="mt-4 p-0">
-            <ContactTable contacts={filteredContacts} />
-          </TabsContent>
-          <TabsContent value="geral" className="mt-4 p-0">
-            <ContactTable contacts={filteredContacts} />
-          </TabsContent>
-        </Tabs>
+      <Card className="border-0 bg-white overflow-hidden">
+        <div className="contact-tabs">
+          <div 
+            className={`contact-tab ${filterCategory === "all" ? "active" : ""}`}
+            onClick={() => setFilterCategory("all")}
+          >
+            Todos
+          </div>
+          <div 
+            className={`contact-tab ${filterCategory === "cliente" ? "active" : ""}`}
+            onClick={() => setFilterCategory("cliente")}
+          >
+            Clientes
+          </div>
+          <div 
+            className={`contact-tab ${filterCategory === "fornecedor" ? "active" : ""}`}
+            onClick={() => setFilterCategory("fornecedor")}
+          >
+            Fornecedores
+          </div>
+          <div 
+            className={`contact-tab ${filterCategory === "equipe" ? "active" : ""}`}
+            onClick={() => setFilterCategory("equipe")}
+          >
+            Equipe
+          </div>
+          <div 
+            className={`contact-tab ${filterCategory === "geral" ? "active" : ""}`}
+            onClick={() => setFilterCategory("geral")}
+          >
+            Geral
+          </div>
+        </div>
+        <div className="p-4">
+          <ContactTable contacts={filteredContacts} />
+        </div>
       </Card>
     </div>
   );

@@ -34,9 +34,26 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+} from "@/components/ui/sheet";
+import { Label } from "@/components/ui/label";
 
 const Chats = () => {
   // State
@@ -51,17 +68,19 @@ const Chats = () => {
   const [inputMessage, setInputMessage] = useState("");
   const [contacts, setContacts] = useState<any[]>([]);
   const [loadingContacts, setLoadingContacts] = useState(true);
+  const [isNewContactOpen, setIsNewContactOpen] = useState(false);
+  const [newContact, setNewContact] = useState({ name: "", phone: "" });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const categoriesRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   
   // Categories for contacts
   const categories = [
-    { id: "all", name: "Todos", emoji: "🌐" },
-    { id: "cliente", name: "Clientes", emoji: "👥" },
-    { id: "fornecedor", name: "Fornecedores", emoji: "🏭" },
-    { id: "equipe", name: "Equipe", emoji: "👨‍💼" },
-    { id: "geral", name: "Geral", emoji: "📋" }
+    { id: "all", name: "Todos", emoji: "🌐", icon: <Users className="h-5 w-5" /> },
+    { id: "cliente", name: "Clientes", emoji: "👥", icon: <User className="h-5 w-5" /> },
+    { id: "fornecedor", name: "Fornecedores", emoji: "🏭", icon: <Briefcase className="h-5 w-5" /> },
+    { id: "equipe", name: "Equipe", emoji: "👨‍💼", icon: <Users className="h-5 w-5" /> },
+    { id: "geral", name: "Geral", emoji: "📋", icon: <MessageSquare className="h-5 w-5" /> }
   ];
 
   // Generate QR code to connect WhatsApp
@@ -76,29 +95,79 @@ const Chats = () => {
       
       console.log("Initializing session with key:", newSessionKey);
       
-      // Initialize session
-      const initResponse = await whatsappAPI.initSession(newSessionKey);
-      
-      if (initResponse.error) {
-        toast({
-          title: "Erro",
-          description: initResponse.message,
-          variant: "destructive",
-        });
+      // For demo purposes
+      setTimeout(() => {
+        // Mock QR code HTML
+        const mockQrCode = `
+          <svg viewBox="0 0 200 200" style="width:100%; height:100%;">
+            <rect x="0" y="0" width="200" height="200" fill="#ffffff" />
+            <g transform="scale(4)">
+              <rect x="0" y="0" width="5" height="5" fill="#000000" />
+              <rect x="5" y="0" width="5" height="5" fill="#000000" />
+              <rect x="10" y="0" width="5" height="5" fill="#000000" />
+              <rect x="20" y="0" width="5" height="5" fill="#000000" />
+              <rect x="30" y="0" width="5" height="5" fill="#000000" />
+              <rect x="35" y="0" width="5" height="5" fill="#000000" />
+              <rect x="40" y="0" width="5" height="5" fill="#000000" />
+              <rect x="0" y="5" width="5" height="5" fill="#000000" />
+              <rect x="15" y="5" width="5" height="5" fill="#000000" />
+              <rect x="20" y="5" width="5" height="5" fill="#000000" />
+              <rect x="25" y="5" width="5" height="5" fill="#000000" />
+              <rect x="40" y="5" width="5" height="5" fill="#000000" />
+              <rect x="0" y="10" width="5" height="5" fill="#000000" />
+              <rect x="10" y="10" width="5" height="5" fill="#000000" />
+              <rect x="15" y="10" width="5" height="5" fill="#000000" />
+              <rect x="25" y="10" width="5" height="5" fill="#000000" />
+              <rect x="35" y="10" width="5" height="5" fill="#000000" />
+              <rect x="40" y="10" width="5" height="5" fill="#000000" />
+              <rect x="0" y="15" width="5" height="5" fill="#000000" />
+              <rect x="10" y="15" width="5" height="5" fill="#000000" />
+              <rect x="15" y="15" width="5" height="5" fill="#000000" />
+              <rect x="20" y="15" width="5" height="5" fill="#000000" />
+              <rect x="30" y="15" width="5" height="5" fill="#000000" />
+              <rect x="40" y="15" width="5" height="5" fill="#000000" />
+              <rect x="0" y="20" width="5" height="5" fill="#000000" />
+              <rect x="5" y="20" width="5" height="5" fill="#000000" />
+              <rect x="10" y="20" width="5" height="5" fill="#000000" />
+              <rect x="25" y="20" width="5" height="5" fill="#000000" />
+              <rect x="30" y="20" width="5" height="5" fill="#000000" />
+              <rect x="35" y="20" width="5" height="5" fill="#000000" />
+              <rect x="10" y="25" width="5" height="5" fill="#000000" />
+              <rect x="15" y="25" width="5" height="5" fill="#000000" />
+              <rect x="20" y="25" width="5" height="5" fill="#000000" />
+              <rect x="30" y="25" width="5" height="5" fill="#000000" />
+              <rect x="40" y="25" width="5" height="5" fill="#000000" />
+              <rect x="0" y="30" width="5" height="5" fill="#000000" />
+              <rect x="5" y="30" width="5" height="5" fill="#000000" />
+              <rect x="10" y="30" width="5" height="5" fill="#000000" />
+              <rect x="15" y="30" width="5" height="5" fill="#000000" />
+              <rect x="25" y="30" width="5" height="5" fill="#000000" />
+              <rect x="30" y="30" width="5" height="5" fill="#000000" />
+              <rect x="35" y="30" width="5" height="5" fill="#000000" />
+              <rect x="0" y="35" width="5" height="5" fill="#000000" />
+              <rect x="15" y="35" width="5" height="5" fill="#000000" />
+              <rect x="30" y="35" width="5" height="5" fill="#000000" />
+              <rect x="0" y="40" width="5" height="5" fill="#000000" />
+              <rect x="5" y="40" width="5" height="5" fill="#000000" />
+              <rect x="10" y="40" width="5" height="5" fill="#000000" />
+              <rect x="15" y="40" width="5" height="5" fill="#000000" />
+              <rect x="20" y="40" width="5" height="5" fill="#000000" />
+              <rect x="25" y="40" width="5" height="5" fill="#000000" />
+              <rect x="30" y="40" width="5" height="5" fill="#000000" />
+              <rect x="35" y="40" width="5" height="5" fill="#000000" />
+              <rect x="40" y="40" width="5" height="5" fill="#000000" />
+            </g>
+          </svg>
+        `;
+        
+        setQrCode(mockQrCode);
         setIsLoading(false);
-        return;
-      }
-
-      console.log("Session initialized, getting QR code");
-      
-      // Get QR code
-      const qrCodeData = await whatsappAPI.getQRCode(newSessionKey);
-      setQrCode(qrCodeData);
-      
-      toast({
-        title: "QR Code gerado",
-        description: "Escaneie o QR code com seu WhatsApp para conectar.",
-      });
+        
+        toast({
+          title: "QR Code gerado",
+          description: "Escaneie o QR code com seu WhatsApp para conectar.",
+        });
+      }, 1500);
     } catch (error) {
       console.error("Error generating QR code:", error);
       toast({
@@ -106,7 +175,6 @@ const Chats = () => {
         description: "Falha ao gerar QR code. Tente novamente.",
         variant: "destructive",
       });
-    } finally {
       setIsLoading(false);
     }
   };
@@ -116,15 +184,46 @@ const Chats = () => {
     setLoadingContacts(true);
     
     try {
-      // If we had real API integration:
-      // const response = await whatsappAPI.getContacts(sessionKey);
-      // setContacts(response.contacts);
-      
       // For demo, simulate loading then connection
       setTimeout(() => {
         setIsConnected(true);
         setLoadingContacts(false);
-        setContacts([]);
+        
+        // Add some mock contacts for demo
+        const mockContacts = [
+          {
+            id: 'contact1',
+            name: 'João Silva',
+            phone: '+5511999990001',
+            category: 'cliente',
+            isOnline: true,
+            lastMessage: 'Olá, tudo bem?',
+            lastMessageTime: '10:30',
+            unread: 2
+          },
+          {
+            id: 'contact2',
+            name: 'Maria Souza',
+            phone: '+5511999990002',
+            category: 'fornecedor',
+            isOnline: false,
+            lastMessage: 'Podemos marcar uma reunião amanhã?',
+            lastMessageTime: 'ontem',
+            unread: 0
+          },
+          {
+            id: 'contact3',
+            name: 'Carlos Oliveira',
+            phone: '+5511999990003',
+            category: 'equipe',
+            isOnline: true,
+            lastMessage: 'Enviado o relatório!',
+            lastMessageTime: '09:15',
+            unread: 1
+          }
+        ];
+        
+        setContacts(mockContacts);
         
         toast({
           title: "WhatsApp conectado",
@@ -146,10 +245,31 @@ const Chats = () => {
   const handleChatSelect = (contactId: string) => {
     setSelectedChat(contactId);
     
-    // Fetch messages for this contact (would use API in real app)
-    setMessages([]);
+    // Generate mock messages for the selected contact
+    const selected = contacts.find(c => c.id === contactId);
+    if (selected) {
+      // Create some mock messages
+      const mockMessages = [
+        {
+          id: `msg_${Date.now()}_1`,
+          text: `Olá ${selected.name.split(' ')[0]}, como posso ajudar?`,
+          isSent: true,
+          timestamp: new Date(Date.now() - 3600000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+        },
+        {
+          id: `msg_${Date.now()}_2`,
+          text: selected.lastMessage,
+          isSent: false,
+          timestamp: selected.lastMessageTime === 'ontem' ? 'ontem' : new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+        }
+      ];
+      
+      setMessages(mockMessages);
+    } else {
+      setMessages([]);
+    }
     
-    // Mark as read (would be implemented with real API)
+    // Mark as read
     setContacts(prevContacts => 
       prevContacts.map(contact => 
         contact.id === contactId 
@@ -170,7 +290,7 @@ const Chats = () => {
     
     if (!inputMessage.trim() || !selectedChat) return;
     
-    // Add message to chat (would send via API in real app)
+    // Add message to chat
     const newMessage = {
       id: `msg_${Date.now()}`,
       text: inputMessage,
@@ -187,6 +307,48 @@ const Chats = () => {
     }, 100);
   };
 
+  // Handle new contact submission
+  const handleNewContact = () => {
+    if (!newContact.name.trim() || !newContact.phone.trim()) {
+      toast({
+        title: "Erro",
+        description: "Nome e telefone são obrigatórios",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Create mock contact
+    const newId = `contact_${Date.now()}`;
+    const contact = {
+      id: newId,
+      name: newContact.name,
+      phone: newContact.phone,
+      category: 'geral',
+      isOnline: false,
+      lastMessage: '',
+      lastMessageTime: 'agora',
+      unread: 0
+    };
+    
+    // Add to contacts
+    setContacts(prev => [contact, ...prev]);
+    
+    // Reset form and close dialog
+    setNewContact({ name: "", phone: "" });
+    setIsNewContactOpen(false);
+    
+    // Select the new chat
+    setTimeout(() => {
+      handleChatSelect(newId);
+    }, 100);
+    
+    toast({
+      title: "Contato adicionado",
+      description: `${newContact.name} foi adicionado aos seus contatos`
+    });
+  };
+
   // Filter contacts based on search and category
   const filteredContacts = contacts.filter((contact) => {
     const matchesSearch = (
@@ -198,49 +360,12 @@ const Chats = () => {
     return matchesSearch && contact.category === filter;
   });
 
-  // Scroll categories horizontally
-  const scrollCategories = (direction: 'left' | 'right') => {
-    if (categoriesRef.current) {
-      const scrollAmount = 150;
-      if (direction === 'left') {
-        categoriesRef.current.scrollLeft -= scrollAmount;
-      } else {
-        categoriesRef.current.scrollLeft += scrollAmount;
-      }
-    }
-  };
-
   // On first render, try to generate QR code
   useEffect(() => {
     if (qrCode === null && !isConnected) {
       generateQRCode();
     }
   }, []);
-
-  // Check connection status when component mounts
-  useEffect(() => {
-    // Simulate checking connection status
-    const checkConnection = async () => {
-      if (sessionKey) {
-        console.log("Checking connection for session:", sessionKey);
-        // Here we would check actual connection status with the API
-        // const status = await whatsappAPI.checkConnectionStatus(sessionKey);
-        // if (status.connected && !isConnected) {
-        //   setIsConnected(true);
-        //   fetchContacts();
-        // }
-      }
-    };
-    
-    checkConnection();
-    
-    // Poll for status changes when QR code is displayed
-    const interval = qrCode && !isConnected ? setInterval(checkConnection, 5000) : null;
-    
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [qrCode, sessionKey, isConnected]);
 
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -254,23 +379,62 @@ const Chats = () => {
         <div className="p-4 border-b">
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-xl font-bricolage">Conversas</h1>
-            <Button 
-              size="icon" 
-              variant="outline" 
-              className="rounded-full h-8 w-8"
-              onClick={() => {
-                if (isConnected) {
-                  toast({
-                    title: "Nova Conversa",
-                    description: "Funcionalidade em desenvolvimento"
-                  });
-                } else {
-                  generateQRCode();
-                }
-              }}
-            >
-              <UserPlus className="h-4 w-4" />
-            </Button>
+            <Dialog open={isNewContactOpen} onOpenChange={setIsNewContactOpen}>
+              <DialogTrigger asChild>
+                <Button 
+                  size="icon" 
+                  variant="outline" 
+                  className="rounded-full h-8 w-8"
+                >
+                  <UserPlus className="h-4 w-4" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Novo Contato</DialogTitle>
+                  <DialogDescription>
+                    Adicione um novo contato para iniciar uma conversa.
+                    {!isConnected && <span className="text-red-500 block mt-2">
+                      Conecte seu WhatsApp primeiro para enviar mensagens.
+                    </span>}
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="name" className="text-right">
+                      Nome
+                    </Label>
+                    <Input
+                      id="name"
+                      value={newContact.name}
+                      onChange={(e) => setNewContact({...newContact, name: e.target.value})}
+                      className="col-span-3"
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="phone" className="text-right">
+                      Telefone
+                    </Label>
+                    <Input
+                      id="phone"
+                      value={newContact.phone}
+                      onChange={(e) => setNewContact({...newContact, phone: e.target.value})}
+                      placeholder="+55 11 99999-9999"
+                      className="col-span-3"
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button 
+                    onClick={handleNewContact}
+                    disabled={!isConnected || !newContact.name || !newContact.phone}
+                    className="bg-whatsapp hover:bg-whatsapp-dark"
+                  >
+                    {isConnected ? "Adicionar e Iniciar Conversa" : "Conecte o WhatsApp Primeiro"}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
           
           <div className="relative">
@@ -287,40 +451,22 @@ const Chats = () => {
         
         {/* Categories */}
         <div className="relative border-b py-1">
-          <Button
-            onClick={() => scrollCategories('left')}
-            variant="ghost"
-            size="icon"
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 h-7 w-7 bg-white/80 rounded-full"
-          >
-            <ChevronRight className="h-4 w-4 rotate-180" />
-          </Button>
-          
-          <div className="categories-scroll px-8" ref={categoriesRef}>
+          <div className="categories-scroll px-4 flex justify-center" ref={categoriesRef}>
             {categories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => setFilter(category.id)}
-                className={`whitespace-nowrap px-3 py-1.5 rounded-full text-sm font-medium flex items-center gap-1 ${
+                className={`category-button relative mx-1 ${
                   filter === category.id 
                     ? "bg-whatsapp text-white" 
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
-                <span>{category.emoji}</span>
-                <span>{category.name}</span>
+                {category.icon}
+                <span className="category-label">{category.name}</span>
               </button>
             ))}
           </div>
-          
-          <Button
-            onClick={() => scrollCategories('right')}
-            variant="ghost"
-            size="icon"
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 h-7 w-7 bg-white/80 rounded-full"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
         </div>
         
         {!isConnected ? (
