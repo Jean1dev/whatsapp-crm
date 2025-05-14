@@ -1,5 +1,5 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Bricolage+Grotesque:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,7 +7,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 210 40% 98%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -75,6 +75,7 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 142 70% 49%; /* WhatsApp Green */
+    
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 142 70% 49%; /* WhatsApp Green */
@@ -94,6 +95,7 @@
   body {
     @apply bg-background text-foreground font-sans;
     font-family: 'Inter', sans-serif;
+    background-image: linear-gradient(to bottom right, rgba(240, 242, 245, 0.8), rgba(233, 237, 241, 0.8));
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -114,7 +116,7 @@
 }
 
 .conversation-card {
-  @apply bg-white rounded-md shadow p-3 cursor-grab hover:shadow-md transition-shadow duration-200;
+  @apply bg-white rounded-md p-3 cursor-grab hover:bg-muted/30 transition-colors duration-200;
 }
 
 .message-bubble {
@@ -128,3 +130,32 @@
 .message-bubble-received {
   @apply bg-white rounded-tl-none border;
 }
+
+.categories-scroll {
+  @apply flex space-x-2 overflow-x-auto py-2 px-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-gray-300;
+  -ms-overflow-style: none;
+  scrollbar-width: thin;
+}
+
+.categories-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.categories-scroll::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+
+.contact-avatar {
+  @apply relative flex items-center justify-center h-10 w-10 rounded-full shrink-0 text-white;
+}
+
+.avatar-initial {
+  @apply font-medium text-lg;
+}
+
+.contact-list {
+  @apply space-y-1 overflow-y-auto divide-y divide-gray-100;
+  height: calc(100vh - 220px);
+}
+
