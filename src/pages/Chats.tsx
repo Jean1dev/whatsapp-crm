@@ -20,7 +20,8 @@ import {
   Video,
   Smile,
   Paperclip,
-  Mic
+  Mic,
+  MessageSquare
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { whatsappAPI } from "@/integrations/whatsapp";
@@ -557,7 +558,7 @@ const Chats = () => {
                 <div className="flex items-center justify-center h-full">
                   <div className="text-center">
                     <div className="mx-auto w-16 h-16 mb-4 flex items-center justify-center rounded-full bg-whatsapp/10">
-                      <MessageIcon className="h-8 w-8 text-whatsapp" />
+                      <MessageSquare className="h-8 w-8 text-whatsapp" />
                     </div>
                     <p className="text-sm text-muted-foreground">
                       Não há mensagens nesta conversa.
@@ -647,24 +648,6 @@ const Chats = () => {
         )}
       </div>
     </div>
-  );
-};
-
-// Message Icon Component
-const MessageIcon = () => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="lucide lucide-message-square"
-    >
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-    </svg>
   );
 };
 

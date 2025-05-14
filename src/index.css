@@ -133,7 +133,7 @@
 
 @layer components {
   .categories-scroll {
-    @apply flex space-x-2 overflow-x-auto py-2 px-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-gray-300;
+    @apply flex space-x-2 overflow-x-auto py-2 px-2 scrollbar-thin;
     -ms-overflow-style: none;
     scrollbar-width: thin;
   }

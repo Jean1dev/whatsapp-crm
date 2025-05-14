@@ -93,7 +93,10 @@ const config = {
   },
   plugins: [
     tailwindcssAnimate,
-    require('tailwind-scrollbar'),
+    require('tailwind-scrollbar')({
+      nocompatible: true,
+      preferredStrategy: 'pseudoelements',
+    }),
   ],
 } satisfies Config;
 
