@@ -1,8 +1,8 @@
 
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Search, 
   RefreshCw, 
@@ -15,7 +15,12 @@ import {
   UserPlus,
   Clock,
   CheckCheck,
-  ChevronRight
+  ChevronRight,
+  Phone,
+  Video,
+  Smile,
+  Paperclip,
+  Mic
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { whatsappAPI } from "@/integrations/whatsapp";
@@ -46,15 +51,16 @@ const Chats = () => {
   const [contacts, setContacts] = useState<any[]>([]);
   const [loadingContacts, setLoadingContacts] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const categoriesRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   
   // Categories for contacts
   const categories = [
-    { id: "all", name: "Todos" },
-    { id: "cliente", name: "Clientes" },
-    { id: "fornecedor", name: "Fornecedores" },
-    { id: "equipe", name: "Equipe" },
-    { id: "geral", name: "Geral" }
+    { id: "all", name: "Todos", emoji: "🌐" },
+    { id: "cliente", name: "Clientes", emoji: "👥" },
+    { id: "fornecedor", name: "Fornecedores", emoji: "🏭" },
+    { id: "equipe", name: "Equipe", emoji: "👨‍💼" },
+    { id: "geral", name: "Geral", emoji: "📋" }
   ];
 
   // Generate QR code to connect WhatsApp
@@ -104,90 +110,43 @@ const Chats = () => {
     }
   };
 
-  // Simulate fetching contacts after QR scan
-  const fetchContacts = () => {
+  // Fetch contacts after QR scan
+  const fetchContacts = async () => {
     setLoadingContacts(true);
     
-    // In a real app, this would fetch from WhatsApp API
-    // For now, simulate loading then connection
-    setTimeout(() => {
-      const demoContacts = [
-        {
-          id: "1",
-          name: "João Silva",
-          phone: "+5511999999999",
-          category: "cliente",
-          lastMessage: "Quando podemos agendar uma reunião?",
-          lastMessageTime: "09:45",
-          isOnline: true,
-          unread: 2,
-        },
-        {
-          id: "2",
-          name: "Maria Oliveira",
-          phone: "+5511988888888",
-          category: "cliente",
-          lastMessage: "Obrigado pelo atendimento!",
-          lastMessageTime: "Ontem",
-          unread: 0,
-        },
-        {
-          id: "3",
-          name: "Carlos Ferreira",
-          phone: "+5511977777777",
-          category: "fornecedor",
-          lastMessage: "Os produtos chegam amanhã",
-          lastMessageTime: "10:23",
-          unread: 0,
-        },
-        {
-          id: "4",
-          name: "Ana Souza",
-          phone: "+5511966666666",
-          category: "equipe",
-          lastMessage: "Reunião às 15h",
-          lastMessageTime: "Ontem",
-          isOnline: true,
-          unread: 0,
-        },
-        {
-          id: "5",
-          name: "Pedro Santos",
-          phone: "+5511955555555",
-          category: "geral",
-          lastMessage: "Podemos conversar depois?",
-          lastMessageTime: "Seg",
-          unread: 1,
-        },
-      ];
+    try {
+      // If we had real API integration:
+      // const response = await whatsappAPI.getContacts(sessionKey);
+      // setContacts(response.contacts);
       
-      setContacts(demoContacts);
-      setLoadingContacts(false);
-      setIsConnected(true);
-      
+      // For demo, simulate loading then connection
+      setTimeout(() => {
+        setIsConnected(true);
+        setLoadingContacts(false);
+        setContacts([]);
+        
+        toast({
+          title: "WhatsApp conectado",
+          description: "Seus contatos foram carregados com sucesso",
+        });
+      }, 2000);
+    } catch (error) {
+      console.error("Error fetching contacts:", error);
       toast({
-        title: "WhatsApp conectado",
-        description: "Seus contatos foram carregados com sucesso",
+        title: "Erro",
+        description: "Falha ao carregar contatos. Tente novamente.",
+        variant: "destructive",
       });
-    }, 2000);
+      setLoadingContacts(false);
+    }
   };
 
   // Handle chat selection
   const handleChatSelect = (contactId: string) => {
     setSelectedChat(contactId);
     
-    // Fetch messages for this contact (simulated)
-    const demoMessages = [
-      { id: "1", text: "Olá, tudo bem?", isSent: false, timestamp: "09:30" },
-      { id: "2", text: "Tudo ótimo, como posso ajudar?", isSent: true, timestamp: "09:32" },
-      { id: "3", text: "Estou interessado no seu produto", isSent: false, timestamp: "09:35" },
-      { id: "4", text: "Qual produto específico você tem interesse?", isSent: true, timestamp: "09:37" },
-      { id: "5", text: "O novo modelo X-2000", isSent: false, timestamp: "09:40" },
-      { id: "6", text: "Excelente escolha! Posso te passar mais informações", isSent: true, timestamp: "09:42" },
-      { id: "7", text: "Quando podemos agendar uma reunião?", isSent: false, timestamp: "09:45" },
-    ];
-    
-    setMessages(demoMessages);
+    // Fetch messages for this contact (would use API in real app)
+    setMessages([]);
     
     // Mark as read (would be implemented with real API)
     setContacts(prevContacts => 
@@ -230,13 +189,25 @@ const Chats = () => {
   // Filter contacts based on search and category
   const filteredContacts = contacts.filter((contact) => {
     const matchesSearch = (
-      contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact.phone.includes(searchTerm)
+      contact?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      contact?.phone?.includes(searchTerm)
     );
     
     if (filter === "all") return matchesSearch;
     return matchesSearch && contact.category === filter;
   });
+
+  // Scroll categories horizontally
+  const scrollCategories = (direction: 'left' | 'right') => {
+    if (categoriesRef.current) {
+      const scrollAmount = 150;
+      if (direction === 'left') {
+        categoriesRef.current.scrollLeft -= scrollAmount;
+      } else {
+        categoriesRef.current.scrollLeft += scrollAmount;
+      }
+    }
+  };
 
   // On first render, try to generate QR code
   useEffect(() => {
@@ -248,10 +219,15 @@ const Chats = () => {
   // Check connection status when component mounts
   useEffect(() => {
     // Simulate checking connection status
-    const checkConnection = () => {
+    const checkConnection = async () => {
       if (sessionKey) {
         console.log("Checking connection for session:", sessionKey);
         // Here we would check actual connection status with the API
+        // const status = await whatsappAPI.checkConnectionStatus(sessionKey);
+        // if (status.connected && !isConnected) {
+        //   setIsConnected(true);
+        //   fetchContacts();
+        // }
       }
     };
     
@@ -271,9 +247,9 @@ const Chats = () => {
   }, [messages]);
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full gap-4 max-h-[calc(100vh-130px)]">
       {/* Left sidebar - Contact list - Fixed width and scrollable */}
-      <div className="w-80 bg-white rounded-lg shadow-sm mr-4 flex flex-col h-[calc(100vh-130px)]">
+      <div className="w-80 bg-white rounded-lg flex flex-col h-full">
         <div className="p-4 border-b">
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-xl font-bricolage">Conversas</h1>
@@ -309,26 +285,49 @@ const Chats = () => {
         </div>
         
         {/* Categories */}
-        <div className="categories-scroll border-b">
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => setFilter(category.id)}
-              className={`whitespace-nowrap px-3 py-1.5 rounded-full text-sm font-medium ${
-                filter === category.id 
-                  ? "bg-whatsapp text-white" 
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              {category.name}
-            </button>
-          ))}
+        <div className="relative border-b py-1">
+          <Button
+            onClick={() => scrollCategories('left')}
+            variant="ghost"
+            size="icon"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 h-7 w-7 bg-white/80 rounded-full"
+          >
+            <ChevronRight className="h-4 w-4 rotate-180" />
+          </Button>
+          
+          <div className="categories-scroll px-8" ref={categoriesRef}>
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setFilter(category.id)}
+                className={`whitespace-nowrap px-3 py-1.5 rounded-full text-sm font-medium flex items-center gap-1 ${
+                  filter === category.id 
+                    ? "bg-whatsapp text-white" 
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                <span>{category.emoji}</span>
+                <span>{category.name}</span>
+              </button>
+            ))}
+          </div>
+          
+          <Button
+            onClick={() => scrollCategories('right')}
+            variant="ghost"
+            size="icon"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 h-7 w-7 bg-white/80 rounded-full"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
         </div>
         
         {!isConnected ? (
           <div className="flex-1 flex items-center justify-center p-6">
             <div className="text-center space-y-3">
-              <QrCode className="h-12 w-12 text-whatsapp mx-auto" />
+              <div className="mx-auto w-16 h-16 mb-2 flex items-center justify-center rounded-full bg-whatsapp/10">
+                <QrCode className="h-8 w-8 text-whatsapp" />
+              </div>
               <h2 className="font-bricolage font-bold">Conecte seu WhatsApp</h2>
               <p className="text-sm text-muted-foreground">
                 Escaneie o QR code para ver seus contatos
@@ -349,7 +348,7 @@ const Chats = () => {
             </div>
           </div>
         ) : loadingContacts ? (
-          <div className="flex-1 p-2 space-y-3">
+          <div className="flex-1 p-3 space-y-3">
             {Array.from({length: 5}).map((_, i) => (
               <div key={i} className="flex items-center space-x-3 p-2">
                 <Skeleton className="h-10 w-10 rounded-full" />
@@ -361,65 +360,69 @@ const Chats = () => {
             ))}
           </div>
         ) : (
-          <div className="contact-list p-2 overflow-y-auto">
-            {filteredContacts.length === 0 ? (
-              <div className="text-center py-6 text-muted-foreground">
-                Nenhum contato encontrado.
-              </div>
-            ) : (
-              filteredContacts.map((contact) => (
-                <button
-                  key={contact.id}
-                  onClick={() => handleChatSelect(contact.id)}
-                  className={`w-full text-left p-2.5 rounded-lg transition-colors hover:bg-gray-50 ${
-                    selectedChat === contact.id ? "bg-gray-50" : ""
-                  }`}
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="relative">
-                      <Avatar className="h-10 w-10 bg-gradient-to-br from-whatsapp to-whatsapp-dark">
-                        <AvatarFallback className="bg-gradient-to-br from-whatsapp to-whatsapp-dark text-white">
-                          {contact.name.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      {contact.isOnline && (
-                        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"></span>
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-medium truncate">{contact.name}</h3>
-                        <span className="text-xs text-muted-foreground whitespace-nowrap ml-1">
-                          {contact.lastMessageTime}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <p className="text-xs text-muted-foreground truncate">
-                          {contact.lastMessage}
-                        </p>
-                        {contact.unread > 0 && (
-                          <Badge 
-                            variant="default"
-                            className="ml-1 bg-whatsapp min-w-5 h-5 rounded-full px-1.5"
-                          >
-                            {contact.unread}
-                          </Badge>
+          <ScrollArea className="flex-1">
+            <div className="p-2">
+              {filteredContacts.length === 0 ? (
+                <div className="text-center py-6 text-muted-foreground">
+                  <Users className="h-10 w-10 mx-auto mb-2 text-muted-foreground/50" />
+                  <p>Nenhum contato encontrado.</p>
+                  <p className="text-xs mt-2">Inicie uma nova conversa para adicionar contatos.</p>
+                </div>
+              ) : (
+                filteredContacts.map((contact) => (
+                  <button
+                    key={contact.id}
+                    onClick={() => handleChatSelect(contact.id)}
+                    className={`w-full text-left p-2.5 rounded-lg transition-colors hover:bg-gray-50 ${
+                      selectedChat === contact.id ? "bg-gray-50" : ""
+                    }`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className="relative">
+                        <Avatar className="h-10 w-10 bg-gradient-to-br from-whatsapp to-whatsapp-dark">
+                          <AvatarFallback className="bg-gradient-to-br from-whatsapp to-whatsapp-dark text-white">
+                            {contact.name.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                        {contact.isOnline && (
+                          <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"></span>
                         )}
                       </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-medium truncate">{contact.name}</h3>
+                          <span className="text-xs text-muted-foreground whitespace-nowrap ml-1">
+                            {contact.lastMessageTime}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <p className="text-xs text-muted-foreground truncate">
+                            {contact.lastMessage}
+                          </p>
+                          {contact.unread > 0 && (
+                            <Badge 
+                              variant="default"
+                              className="ml-1 bg-whatsapp min-w-5 h-5 rounded-full px-1.5"
+                            >
+                              {contact.unread}
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </button>
-              ))
-            )}
-          </div>
+                  </button>
+                ))
+              )}
+            </div>
+          </ScrollArea>
         )}
       </div>
       
       {/* Right content - QR code or chat */}
-      <div className="flex-1 flex flex-col bg-white rounded-lg shadow-sm h-[calc(100vh-130px)]">
+      <div className="flex-1 flex flex-col bg-white rounded-lg h-full">
         {!isConnected ? (
           <div className="flex-1 flex items-center justify-center p-6">
-            <Card className="w-full max-w-md mx-auto">
+            <Card className="w-full max-w-md mx-auto border-0">
               <CardContent className="pt-6 pb-4 space-y-6">
                 <div className="text-center">
                   <h2 className="text-2xl font-bricolage font-bold mb-2">
@@ -433,15 +436,21 @@ const Chats = () => {
                 {qrCode ? (
                   <div className="mx-auto">
                     <div 
-                      className="w-72 h-72 mx-auto bg-white p-3 rounded-lg flex items-center justify-center"
+                      className="w-64 h-64 mx-auto bg-white p-4 flex items-center justify-center rounded-lg border"
                       dangerouslySetInnerHTML={{ __html: qrCode }}
                     />
-                    <div className="mt-6">
+                    <div className="mt-6 space-y-2">
+                      <p className="text-sm text-center text-muted-foreground">
+                        1. Abra o WhatsApp no seu celular<br/>
+                        2. Toque em Menu ou Configurações<br/>
+                        3. Selecione WhatsApp Web<br/>
+                        4. Aponte a câmera para este QR code
+                      </p>
                       <Button 
                         variant="outline" 
                         onClick={generateQRCode} 
                         disabled={isLoading}
-                        className="w-full"
+                        className="w-full mt-4"
                       >
                         {isLoading ? (
                           <>
@@ -501,13 +510,13 @@ const Chats = () => {
                 
                 <Avatar className="h-10 w-10 bg-gradient-to-br from-whatsapp to-whatsapp-dark">
                   <AvatarFallback className="bg-gradient-to-br from-whatsapp to-whatsapp-dark text-white">
-                    {contacts.find(c => c.id === selectedChat)?.name.charAt(0)}
+                    {contacts.find(c => c.id === selectedChat)?.name?.charAt(0) || "?"}
                   </AvatarFallback>
                 </Avatar>
                 
                 <div className="ml-3">
                   <h3 className="font-medium">
-                    {contacts.find(c => c.id === selectedChat)?.name}
+                    {contacts.find(c => c.id === selectedChat)?.name || "Contato"}
                   </h3>
                   <p className="text-xs text-muted-foreground">
                     {contacts.find(c => c.id === selectedChat)?.isOnline 
@@ -517,89 +526,145 @@ const Chats = () => {
                 </div>
               </div>
               
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <MoreVertical className="h-5 w-5" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Ver contato</DropdownMenuItem>
-                  <DropdownMenuItem>Arquivar conversa</DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-red-500">
-                    Apagar conversa
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <div className="flex items-center space-x-1">
+                <Button variant="ghost" size="icon">
+                  <Video className="h-5 w-5" />
+                </Button>
+                <Button variant="ghost" size="icon">
+                  <Phone className="h-5 w-5" />
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <MoreVertical className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem>Ver contato</DropdownMenuItem>
+                    <DropdownMenuItem>Arquivar conversa</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="text-red-500">
+                      Apagar conversa
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
             
             {/* Chat messages */}
-            <div className="flex-1 overflow-y-auto p-4 bg-[#f5f6f7]">
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex mb-3 ${message.isSent ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div 
-                    className={`max-w-[75%] rounded-lg p-3 px-4 shadow-sm ${
-                      message.isSent 
-                        ? 'bg-whatsapp-light text-gray-800 rounded-tr-none' 
-                        : 'bg-white text-gray-800 rounded-tl-none'
-                    }`}
-                  >
-                    <p className="text-sm">{message.text}</p>
-                    <div className="flex items-center justify-end mt-1 space-x-1">
-                      <span className="text-[10px] text-gray-500">
-                        {message.timestamp}
-                      </span>
-                      {message.isSent && (
-                        <CheckCheck className="h-3 w-3 text-whatsapp" />
-                      )}
+            <ScrollArea className="flex-1 px-3 bg-[#f0f2f5]">
+              {messages.length === 0 ? (
+                <div className="flex items-center justify-center h-full">
+                  <div className="text-center">
+                    <div className="mx-auto w-16 h-16 mb-4 flex items-center justify-center rounded-full bg-whatsapp/10">
+                      <MessageIcon className="h-8 w-8 text-whatsapp" />
                     </div>
+                    <p className="text-sm text-muted-foreground">
+                      Não há mensagens nesta conversa.
+                    </p>
                   </div>
                 </div>
-              ))}
-              <div ref={messagesEndRef} />
-            </div>
+              ) : (
+                <div className="py-4">
+                  {messages.map((message) => (
+                    <div
+                      key={message.id}
+                      className={`flex mb-3 ${message.isSent ? 'justify-end' : 'justify-start'}`}
+                    >
+                      <div 
+                        className={`max-w-[75%] rounded-lg p-3 px-4 ${
+                          message.isSent 
+                            ? 'bg-whatsapp-light text-gray-800 rounded-tr-none' 
+                            : 'bg-white text-gray-800 rounded-tl-none'
+                        }`}
+                      >
+                        <p className="text-sm">{message.text}</p>
+                        <div className="flex items-center justify-end mt-1 space-x-1">
+                          <span className="text-[10px] text-gray-500">
+                            {message.timestamp}
+                          </span>
+                          {message.isSent && (
+                            <CheckCheck className="h-3 w-3 text-whatsapp" />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  <div ref={messagesEndRef} />
+                </div>
+              )}
+            </ScrollArea>
             
             {/* Message input */}
-            <div className="border-t p-3">
-              <form className="flex items-center" onSubmit={handleSendMessage}>
+            <div className="border-t p-3 bg-[#f0f2f5]">
+              <form className="flex items-center gap-2" onSubmit={handleSendMessage}>
+                <Button type="button" variant="ghost" size="icon" className="text-gray-500">
+                  <Smile className="h-5 w-5" />
+                </Button>
+                <Button type="button" variant="ghost" size="icon" className="text-gray-500">
+                  <Paperclip className="h-5 w-5" />
+                </Button>
                 <Input
                   type="text"
                   placeholder="Digite uma mensagem..."
-                  className="flex-1"
+                  className="flex-1 bg-white"
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                 />
-                <Button 
-                  type="submit" 
-                  size="icon" 
-                  className="ml-2 bg-whatsapp hover:bg-whatsapp-dark"
-                  disabled={!inputMessage.trim()}
-                >
-                  <Send className="h-4 w-4" />
-                </Button>
+                {inputMessage.trim() ? (
+                  <Button 
+                    type="submit" 
+                    size="icon" 
+                    className="bg-whatsapp hover:bg-whatsapp-dark"
+                  >
+                    <Send className="h-4 w-4" />
+                  </Button>
+                ) : (
+                  <Button 
+                    type="button" 
+                    size="icon" 
+                    className="bg-whatsapp hover:bg-whatsapp-dark"
+                  >
+                    <Mic className="h-4 w-4" />
+                  </Button>
+                )}
               </form>
             </div>
           </div>
         ) : (
           // No chat selected
-          <div className="flex-1 flex items-center justify-center">
+          <div className="flex-1 flex items-center justify-center bg-[#f0f2f5]">
             <div className="text-center p-6">
               <div className="mx-auto w-20 h-20 mb-4 flex items-center justify-center rounded-full bg-whatsapp/10">
                 <Users className="h-10 w-10 text-whatsapp" />
               </div>
               <h3 className="text-xl font-bricolage font-bold mb-2">Selecione uma conversa</h3>
               <p className="text-muted-foreground max-w-md">
-                Escolha um contato na lista à esquerda para visualizar as mensagens ou iniciar uma nova conversa.
+                Escolha um contato na lista à esquerda para visualizar as mensagens ou inicie uma nova conversa.
               </p>
             </div>
           </div>
         )}
       </div>
     </div>
+  );
+};
+
+// Message Icon Component
+const MessageIcon = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="lucide lucide-message-square"
+    >
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </svg>
   );
 };
 

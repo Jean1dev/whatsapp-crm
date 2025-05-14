@@ -131,10 +131,12 @@
   @apply bg-white rounded-tl-none border;
 }
 
-.categories-scroll {
-  @apply flex space-x-2 overflow-x-auto py-2 px-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-gray-300;
-  -ms-overflow-style: none;
-  scrollbar-width: thin;
+@layer components {
+  .categories-scroll {
+    @apply flex space-x-2 overflow-x-auto py-2 px-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-gray-300;
+    -ms-overflow-style: none;
+    scrollbar-width: thin;
+  }
 }
 
 .categories-scroll::-webkit-scrollbar {
@@ -158,4 +160,3 @@
   @apply space-y-1 overflow-y-auto divide-y divide-gray-100;
   height: calc(100vh - 220px);
 }
-
