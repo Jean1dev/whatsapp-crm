@@ -21,7 +21,7 @@ const config = {
     },
     extend: {
       fontFamily: {
-        sans: ["Poppins", "var(--font-sans)", ...fontFamily.sans],
+        sans: ["Inter", "var(--font-sans)", ...fontFamily.sans],
         bricolage: ["Bricolage Grotesque", "var(--font-sans)", ...fontFamily.sans],
       },
       colors: {

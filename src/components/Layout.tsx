@@ -54,7 +54,7 @@ const Layout = () => {
           isSidebarOpen && !isMobile ? "ml-64" : isMobile ? "" : "ml-20"
         }`}
       >
-        <header className="h-16 border-b flex items-center justify-between px-4 sm:px-6 lg:px-8 bg-white shadow-sm">
+        <header className="h-16 border-b flex items-center justify-between px-4 sm:px-6 lg:px-8 bg-white shadow-sm sticky top-0 z-10">
           <div className="flex items-center">
             <Button
               variant="ghost"
@@ -99,7 +99,7 @@ const Layout = () => {
             </DropdownMenu>
           </div>
         </header>
-        <main className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 overflow-auto">
           <Outlet />
         </main>
       </div>
